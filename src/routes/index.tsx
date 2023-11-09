@@ -6,6 +6,8 @@ import type { Message } from "~/types";
 import { isBrowser } from "@builder.io/qwik/build";
 
 export const useTextToText = routeAction$(async (data, { fail }) => {
+  if (!data.message) return;
+
   const url = "https://api.uwpai.net/api/assistant/text-to-text";
   try {
     const response = await fetch(url, {
@@ -38,23 +40,28 @@ export const useTextToText = routeAction$(async (data, { fail }) => {
 export default component$(() => {
   const action = useTextToText();
   const messages = useStore<{ data: Message[] }>({ data: [] });
+  const inputtedText = useSignal<string>();
   const chatRef = useSignal<Element>();
 
   useTask$(({ track }) => {
     const isRunning = track(() => action.isRunning);
     if (isRunning) {
-      const content = action.formData?.get("message") as string;
+      console.log("isRunning",isRunning);
+      const content = inputtedText.value;
       content && messages.data.push({ from: "customer", content });
     }
 
     const isSuccess = track(() => action.value?.success);
     if (isSuccess) {
+      console.log("isSuccess",isSuccess);
+      
       const content = action.value?.result?.content;
       content && messages.data.push({ from: "agent", content });
     }
-
+    
     const isFailed = track(() => action.value?.failed);
     if (isFailed) {
+    console.log("isFailed",isFailed);
       const content = action.value?.message;
       content && messages.data.push({ from: "agent", content });
     }
@@ -65,6 +72,7 @@ export default component$(() => {
 
     if (isBrowser) {
       chatRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
+      // console.log(chatRef.value?.scrollIntoView);
     }
   });
 
@@ -77,17 +85,26 @@ export default component$(() => {
 
         <div
           class="flex h-96 flex-col gap-3 overflow-y-auto px-2 py-3"
-          ref={chatRef}
+          // ref={chatRef}
         >
           {messages.data.map((el, i) => (
-            <MessageRow {...el} key={i} />
+            <MessageRow
+              {...el}
+              key={i}
+              // ref={i === messages.data.length - 1 ? chatRef : undefined}
+            />
           ))}
-          <div class={"h-5 w-5 snap-y"}>{action.isRunning && <Loader />}</div>
+          <div ref={chatRef} class={"h-5 w-5"}>
+            {action.isRunning && <Loader />}
+          </div>
         </div>
 
         <Form
           action={action}
           class="flex h-[46px] rounded-bl-xl  border-t-[1px] border-[#abcdef]"
+          onSubmitCompleted$={() => {
+            inputtedText.value = "";
+          }}
           spaReset
         >
           <input
@@ -97,15 +114,18 @@ export default component$(() => {
             placeholder={
               action.isRunning ? "Wait for the AI reply" : "Type a message"
             }
+            bind:value={inputtedText}
             disabled={action.isRunning}
           />
 
           <button
             class={`${
-              action.isRunning ? "bg-gray-700" : "bg-[#123456]"
-            }  w-16 rounded-br-xl px-2.5 text-white`}
+              !inputtedText.value || action.isRunning
+                ? "bg-gray-700"
+                : "bg-[#123456]"
+            } w-16 rounded-br-xl px-2.5 text-white`}
             type={"submit"}
-            disabled={action.isRunning}
+            disabled={!inputtedText.value || action.isRunning}
           >
             Send
           </button>
