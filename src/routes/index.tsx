@@ -1,78 +1,53 @@
-import { component$, useSignal, useStore, useTask$ } from "@builder.io/qwik";
-import { Form, type DocumentHead, routeAction$ } from "@builder.io/qwik-city";
-import Loader from "~/components/Loader";
+import { Form, type DocumentHead } from "@builder.io/qwik-city";
+import {
+  component$,
+  useSignal,
+  useStore,
+  useTask$,
+  useVisibleTask$,
+} from "@builder.io/qwik";
+
+import Loader from "~/components/icons/Loader";
 import MessageRow from "~/components/MessageRow";
 import type { Message } from "~/types";
-import { isBrowser } from "@builder.io/qwik/build";
-
-export const useTextToText = routeAction$(async (data, { fail }) => {
-  const url = "https://api.uwpai.net/api/assistant/text-to-text";
-  try {
-    const response = await fetch(url, {
-      body: JSON.stringify({
-        content: data.message,
-        language_code: "uk_UA",
-      }),
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (!response.ok) {
-      console.log("error >>", response.statusText);
-      return fail(500, { message: "Network error !" });
-    }
-
-    const result: { content: string; language_code: string } =
-      await response.json();
-
-    return { success: true, result };
-  } catch (error) {
-    console.log("error >>", error);
-    return fail(500, { message: "Network error !" });
-  }
-});
+import { useTextToTextApi } from "./actions";
 
 export default component$(() => {
-  const action = useTextToText();
+  const action = useTextToTextApi();
   const messages = useStore<{ data: Message[] }>({ data: [] });
+  const inputtedText = useSignal<string>();
   const chatRef = useSignal<Element>();
 
   useTask$(({ track }) => {
     const isRunning = track(() => action.isRunning);
-    if (isRunning) {
-      const content = action.formData?.get("message") as string;
-      content && messages.data.push({ from: "customer", content });
-    }
+    const values = track(() => action.value);
 
-    const isSuccess = track(() => action.value?.success);
-    if (isSuccess) {
+    if (isRunning) {
+      const content = inputtedText.value;
+      content && messages.data.push({ from: "customer", content });
+    } else if (values?.success) {
       const content = action.value?.result?.content;
       content && messages.data.push({ from: "agent", content });
-    }
-
-    const isFailed = track(() => action.value?.failed);
-    if (isFailed) {
+    } else if (values?.failed) {
       const content = action.value?.message;
       content && messages.data.push({ from: "agent", content });
     }
   });
 
-  useTask$(({ track }) => {
+  useVisibleTask$(({ track }) => {
     track(() => messages.data.length);
 
-    if (isBrowser) {
-      chatRef.value?.scrollIntoView({ behavior: "smooth", block: "end" });
-    }
+    chatRef.value?.scrollTo({
+      top: chatRef.value.scrollHeight,
+      behavior: "smooth",
+    });
   });
 
   return (
-    <main class={"flex h-screen w-screen items-center justify-center"}>
-      <div class="mx-5 w-full max-w-[670px] rounded-xl shadow-2xl">
+    <main class="flex h-screen w-screen items-center justify-center">
+      <div class="mx-5 w-full max-w-lg rounded-xl shadow-2xl">
         <div class="flex h-16 w-full items-center rounded-t-xl bg-[#123456] px-10 text-xl tracking-wide">
-          <h4 class={"font-bold text-white"}>How can I help?</h4>
+          <h4 class="font-bold text-white">How can I help?</h4>
         </div>
 
         <div
@@ -82,30 +57,35 @@ export default component$(() => {
           {messages.data.map((el, i) => (
             <MessageRow {...el} key={i} />
           ))}
-          <div class={"h-5 w-5 snap-y"}>{action.isRunning && <Loader />}</div>
+          <div class="h-5 w-5">{action.isRunning && <Loader />}</div>
         </div>
 
         <Form
           action={action}
-          class="flex h-[46px] rounded-bl-xl  border-t-[1px] border-[#abcdef]"
-          spaReset
+          class="flex h-12 rounded-bl-xl border-t border-[#abcdef]"
+          onSubmit$={() => {
+            inputtedText.value = "";
+          }}
         >
           <input
             autoComplete="off"
             name="message"
-            class="h-full w-full rounded-bl-xl px-2 pb-1.5 outline-0 "
+            class="h-full w-full rounded-bl-xl p-2 outline-0"
             placeholder={
               action.isRunning ? "Wait for the AI reply" : "Type a message"
             }
+            bind:value={inputtedText}
             disabled={action.isRunning}
           />
 
           <button
             class={`${
-              action.isRunning ? "bg-gray-700" : "bg-[#123456]"
-            }  w-16 rounded-br-xl px-2.5 text-white`}
-            type={"submit"}
-            disabled={action.isRunning}
+              !inputtedText.value || action.isRunning
+                ? "bg-gray-700"
+                : "bg-[#123456]"
+            } w-20 rounded-br-xl text-white`}
+            type="submit"
+            disabled={!inputtedText.value || action.isRunning}
           >
             Send
           </button>
