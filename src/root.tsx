@@ -1,12 +1,13 @@
 import { component$ } from "@builder.io/qwik";
 import {
   QwikCityProvider,
-  RouterOutlet,
-  ServiceWorkerRegister,
+  // RouterOutlet,
+  // ServiceWorkerRegister,
 } from "@builder.io/qwik-city";
 import { RouterHead } from "./components/router-head/router-head";
 
 import "./global.css";
+import UnityWindow from "./components/unity-window/unity-window";
 
 export default component$(() => {
   /**
@@ -24,8 +25,9 @@ export default component$(() => {
         <RouterHead />
       </head>
       <body lang="en">
-        <RouterOutlet />
-        <ServiceWorkerRegister />
+        {/* <RouterOutlet /> */}
+        <UnityWindow/>
+        {/* <ServiceWorkerRegister /> */}
       </body>
     </QwikCityProvider>
   );

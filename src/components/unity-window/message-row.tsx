@@ -1,5 +1,5 @@
 import { type Signal, component$ } from "@builder.io/qwik";
-import { type Message } from "../types";
+import { type Message } from "~/types";
 
 type Props = Message & { ref?: Signal<Element | undefined> };
 
