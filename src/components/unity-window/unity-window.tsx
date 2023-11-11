@@ -7,7 +7,7 @@ import {
   useVisibleTask$,
 } from "@builder.io/qwik";
 
-import Loader from "~/components/icons/Loader";
+import Loader from "../icons/Loader";
 import MessageRow from "./message-row";
 import type { Message } from "~/types";
 import { useTextToTextApi } from "~/routes/actions";
@@ -49,7 +49,7 @@ export default component$<UnityWindowProps>(() => {
 
   return (
     <main class="flex h-screen w-screen items-center justify-center">
-      <div class="mx-5 w-full max-w-lg rounded-xl shadow-2xl">
+      <div class="mx-1 w-full max-w-lg rounded-xl shadow-2xl">
         <div class="flex h-16 w-full items-center rounded-t-xl bg-[#123456] px-10 text-xl tracking-wide">
           <h4 class="font-bold text-white">How can I help?</h4>
         </div>
