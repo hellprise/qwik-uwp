@@ -7,6 +7,8 @@ import {
 import { RouterHead } from "./components/router-head/router-head";
 
 import "./global.css";
+import '@fontsource-variable/montserrat';
+
 import UnityWindow from "./components/unity-window/unity-window";
 
 export default component$(() => {
