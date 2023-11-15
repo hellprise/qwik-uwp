@@ -2,6 +2,9 @@ import { globalAction$ } from "@builder.io/qwik-city";
 import { textToTextApiUrl } from "~/config";
 
 export const useTextToTextApi = globalAction$(async (data, { fail }) => {
+ console.log("ddddddddddddddd");
+ 
+  
   if (!data.message) return;
 
   try {

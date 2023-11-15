@@ -1,12 +1,12 @@
 import { type Signal, component$ } from "@builder.io/qwik";
-import { type Message } from "../../types";
+import { type TMessage } from "~/types";
 
-type Props = Message & { ref?: Signal<Element | undefined> };
+type Props = TMessage & { ref?: Signal<Element | undefined> };
 
-export default component$<Props>(({ from, content, ref }) => {
+export const MessageRow = component$<Props>(({ from, content }) => {
   return (
     <span
-      ref={ref}
+      // ref={ref}
       class={`w-fit rounded-lg px-3 py-1.5
                 ${
                   from === "customer"

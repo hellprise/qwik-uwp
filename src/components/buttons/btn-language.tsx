@@ -57,13 +57,13 @@ interface BtnLanguageProps {
 }
 
 export const BtnLanguage = component$<BtnLanguageProps>(
-  ({ currentLang = "en_GB", class: appendClass, selectLang$ }) => {
-    const showDropdown = useSignal(true);
+  ({ currentLang, class: appendClass, selectLang$ }) => {
+    const showDropdown = useSignal(false);
 
     return (
       <div
         class={`${appendClass} rounded-full border bg-neutral-900
-          ${showDropdown.value ? "-left-[6px] -top-[8px]" : ""}
+          ${showDropdown.value ? "-left-[6px] -top-2" : ""}
         `}
       >
         <button
@@ -77,7 +77,9 @@ export const BtnLanguage = component$<BtnLanguageProps>(
               showDropdown.value ? "rounded-full border" : ""
             }`}
           >
-            <div class={`h-8 w-8 overflow-hidden rounded-full outline outline-1`}>
+            <div
+              class={`h-8 w-8 overflow-hidden rounded-full outline outline-1`}
+            >
               {languages.find((item) => item.value === currentLang)!.icon}
             </div>
           </div>

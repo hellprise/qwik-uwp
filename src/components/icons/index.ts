@@ -12,3 +12,5 @@ export * from "./loader";
 export * from "./microphone";
 export * from "./sound-off";
 export * from "./sound-on";
+export * from "./icon-clip";
+export * from "./icon-send";

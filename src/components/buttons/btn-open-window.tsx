@@ -10,11 +10,11 @@ export const BtnOpenWindow = component$<BtnOpenWindowProps>(
   ({ open, onClick$ }) => {
     return (
       <button
-        class="h-9 w-9 rounded-full border bg-neutral-900 p-[7px]"
+        class="flex-center h-9 w-9 rounded-full border bg-neutral-900"
         onClick$={onClick$}
       >
         <ArrowUp
-          class={`h-[22px] w-[22px] transition-transform ${
+          class={`transition-transform ${
             open ? "" : "rotate-180"
           }`}
         />
