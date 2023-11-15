@@ -26,7 +26,7 @@ body {
   line-height: inherit;
 }
 
-@layer components {
+@layer utilities {
   .flex-center {
     @apply flex items-center justify-center;
   }

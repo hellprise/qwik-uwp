@@ -1,14 +1,14 @@
-import { globalAction$ } from "@builder.io/qwik-city";
-import { textToTextApiUrl } from "~/config";
+import {  routeAction$ } from "@builder.io/qwik-city";
+import { SPEECH_TO_SPEECH_URL } from "~/constants";
 
-export const useTextToTextApi = globalAction$(async (data, { fail }) => {
+export const useTextToTextApi = routeAction$(async (data, { fail }) => {
  console.log("ddddddddddddddd");
  
   
   if (!data.message) return;
 
   try {
-    const response = await fetch(textToTextApiUrl, {
+    const response = await fetch(SPEECH_TO_SPEECH_URL, {
       body: JSON.stringify({
         content: data.message,
         language_code: "uk_UA",

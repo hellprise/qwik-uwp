@@ -10,7 +10,7 @@ export const BtnSend = component$<BtnOpenWindowProps>(
   ({ disabled, action$ }) => {
     return (
       <button
-        class="flex-center h-11 w-[46px] rounded-[10px] border border-[#9363FD] bg-[#323232]"
+        class="flex-center h-11 w-[46px] rounded-[10px] border border-[#9363FD] bg-[#323232] disabled:border-slate-500"
         disabled={disabled}
         onClick$={action$}
       >

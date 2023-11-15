@@ -9,10 +9,10 @@ interface BtnSoundProps {
 export const BtnSound = component$<BtnSoundProps>(({ activated, onClick$ }) => {
   return (
     <button
-      class="flex w-[84px] items-center justify-between rounded-full border bg-neutral-900 px-[15px] py-[7px]"
+      class="flex-center h-9 w-[84px] gap-2 rounded-full border bg-neutral-900"
       onClick$={onClick$}
     >
-      <div class="h-[22px] w-[22px]">
+      <div class="h-[22px] w-[22px] shrink-0">
         {activated ? <SoundOn /> : <SoundOff />}
       </div>
 

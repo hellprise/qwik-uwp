@@ -1,13 +1,13 @@
 import { type DocumentHead } from "@builder.io/qwik-city";
 import {
+  $,
   component$,
   useSignal,
   useStore,
-  useTask$,
   useVisibleTask$,
 } from "@builder.io/qwik";
 
-import { useTextToTextApi } from "~/actions/useTextToTextApi";
+import { useTextToTextApi } from "~/routes/plugin";
 
 import { TextInputField } from "./input-field";
 import { MessageRow } from "./message-row";
@@ -15,34 +15,31 @@ import * as btns from "../buttons";
 import * as icons from "../icons";
 
 import type { TLangCode, TMessage } from "~/types";
+import { textToTextApi } from "~/utils/api";
 
 interface UnityWindowProps {}
 
 export default component$<UnityWindowProps>(() => {
   const actTextToText = useTextToTextApi();
   const messages = useStore<{ data: TMessage[] }>({ data: [] });
-  const inputtedText = useSignal<string>();
   const chatRef = useSignal<Element>();
   const voiceActivated = useSignal(true);
   const windowOpened = useSignal(true);
+  const isFetching = useSignal(false);
   const currentLang = useSignal<TLangCode>("en_GB");
-  
-  
-  
-  useTask$(({ track }) => {
-    const isRunning = track(() => actTextToText.isRunning);
-    const values = track(() => actTextToText.value);
 
-    if (isRunning) {
-      const content = inputtedText.value;
-      content && messages.data.push({ from: "customer", content });
-    } else if (values?.success) {
-      const content = actTextToText.value?.result?.content;
-      content && messages.data.push({ from: "agent", content });
-    } else if (values?.failed) {
-      const content = actTextToText.value?.message;
-      content && messages.data.push({ from: "agent", content });
-    }
+  const sendMessage = $(async (message: string) => {
+    isFetching.value = true;
+    messages.data.push({ from: "customer", content: message });
+
+    const receivedData = await textToTextApi({
+      content: message,
+      language_code: currentLang.value,
+    });
+
+    const content = receivedData ? receivedData.content : "Network error !";
+    messages.data.push({ from: "agent", content });
+    isFetching.value = false;
   });
 
   useVisibleTask$(({ track }) => {
@@ -102,7 +99,7 @@ export default component$<UnityWindowProps>(() => {
 
           <div class="mx-[9.5px] mb-[9px]">
             <div class="mx-auto max-w-[365px]">
-              <TextInputField {...{ inputtedText, actTextToText }} />
+              <TextInputField {...{ sendMessage, isFetching }} />
             </div>
           </div>
         </div>

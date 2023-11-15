@@ -1,12 +1,12 @@
 import { component$, useSignal, $ } from "@builder.io/qwik";
-import { Form } from "@builder.io/qwik-city";
-import { type TTextInputField } from "~/types";
+
 import { BtnAddDocument, BtnSend } from "../buttons";
-// import { type TMessage } from "~/types";
+import { type TTextInputField } from "~/types";
 
 export const TextInputField = component$<TTextInputField>(
-  ({ inputtedText, actTextToText }) => {
+  ({ sendMessage, isFetching }) => {
     const ref = useSignal<HTMLTextAreaElement>();
+    const inputtedText = useSignal<string>();
 
     const handleInput = $((_: Event, el: HTMLTextAreaElement) => {
       inputtedText.value = el.value;
@@ -24,12 +24,16 @@ export const TextInputField = component$<TTextInputField>(
       }
     });
 
+    const handleSubmit = $(() => {
+      sendMessage(inputtedText.value);
+      handleReset();
+    });
+
     return (
-      <Form
-        action={actTextToText}
+      <form
+        preventdefault:submit
         class="flex items-center justify-between gap-3"
-        onSubmit$={handleReset}
-        onSubmitCompleted$={handleReset}
+        onSubmit$={handleSubmit}
       >
         <div class="h-7 shrink-0">
           <BtnAddDocument />
@@ -38,20 +42,19 @@ export const TextInputField = component$<TTextInputField>(
         <textarea
           ref={ref}
           autoComplete="off"
-          name="message"
-          class="h-11 grow rounded-[10px] border bg-[#323232] p-[10px] text-sm text-[#DEDEDE] outline-none"
+          class="h-11 grow resize-none rounded-[10px] border bg-[#323232] p-[10px] text-sm text-[#DEDEDE] outline-none disabled:border-slate-500"
           placeholder={
-            actTextToText.isRunning ? "Wait for the AI reply" : "Type a message"
+            isFetching.value ? "Wait for the AI reply" : "Type a message"
           }
           value={inputtedText.value}
           onInput$={[handleInput, handleResize]}
-          disabled={actTextToText.isRunning}
+          disabled={isFetching.value}
         />
 
         <div class="shrink-0">
-          <BtnSend disabled={!inputtedText.value || actTextToText.isRunning} />
+          <BtnSend disabled={!inputtedText.value || isFetching.value} />
         </div>
-      </Form>
+      </form>
     );
   },
 );

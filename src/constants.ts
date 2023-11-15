@@ -1,9 +1,9 @@
-const baseApiUrl = "https://api.uwpai.net/api/assistant";
+const BASE_API_URL = "https://api.uwpai.net/api/assistant";
 
-export const textToTextApiUrl = baseApiUrl + "/text-to-text";
-export const textToSpeechApiUrl = baseApiUrl + "/text-to-speech";
-export const speechToTextApiUrl = baseApiUrl + "/speech-to-text";
-export const speechToSpeechApiUrl = baseApiUrl + "/speech-to-speech";
+export const TEXT_TO_TEXT_URL = BASE_API_URL + "/text-to-text";
+export const TEXT_TO_SPEECH_URL = BASE_API_URL + "/text-to-speech";
+export const SPEECH_TO_TEXT_URL = BASE_API_URL + "/speech-to-text";
+export const SPEECH_TO_SPEECH_URL = BASE_API_URL + "/speech-to-speech";
 
 // export const langOpts = [
 //   {

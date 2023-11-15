@@ -1,9 +1,14 @@
 import { type Signal } from "@builder.io/qwik";
-import { type ActionStore } from "@builder.io/qwik-city";
+// import { type ActionStore } from "@builder.io/qwik-city";
 
 export type TMessage = {
   from: "agent" | "customer";
   content: string;
+};
+
+export type TFetchData = {
+  content: string;
+  language_code: string;
 };
 
 export type TLangCode =
@@ -18,24 +23,6 @@ export type TLangCode =
   | "ru_RU";
 
 export type TTextInputField = {
-  inputtedText: Signal<string | undefined>;
-  actTextToText: ActionStore<
-    | {
-        message: string;
-        failed: true;
-        success?: undefined;
-        result?: undefined;
-      }
-    | {
-        success: boolean;
-        result: {
-          content: string;
-          language_code: string;
-        };
-        message?: undefined;
-        failed?: undefined;
-      },
-    Record<string, any>,
-    true
-  >;
+  isFetching: Signal<boolean>;
+  sendMessage: QRL<() => Promise<void>>;
 };
