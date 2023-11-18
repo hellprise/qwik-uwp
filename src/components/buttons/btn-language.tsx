@@ -1,4 +1,4 @@
-import { type QRL, component$, useSignal } from "@builder.io/qwik";
+import { type Signal, component$, useSignal } from "@builder.io/qwik";
 import * as icons from "../icons";
 import { type TLangCode } from "~/types";
 
@@ -51,13 +51,12 @@ export const languages = [
 ];
 
 interface BtnLanguageProps {
-  currentLang: TLangCode;
-  class: string;
-  selectLang$: QRL<(langCode: TLangCode) => TLangCode>;
+  currentLang: Signal<TLangCode>;
+  class?: string;
 }
 
 export const BtnLanguage = component$<BtnLanguageProps>(
-  ({ currentLang, class: appendClass, selectLang$ }) => {
+  ({ currentLang, class: appendClass }) => {
     const showDropdown = useSignal(false);
 
     return (
@@ -68,7 +67,7 @@ export const BtnLanguage = component$<BtnLanguageProps>(
       >
         <button
           onClick$={() => (showDropdown.value = !showDropdown.value)}
-          class={`flex-center flex-col gap-[6px]
+          class={`flex-center flex-col gap-[6px] rounded-full
             ${showDropdown.value ? "mx-[6px] my-2" : ""}
           `}
         >
@@ -80,18 +79,18 @@ export const BtnLanguage = component$<BtnLanguageProps>(
             <div
               class={`h-8 w-8 overflow-hidden rounded-full outline outline-1`}
             >
-              {languages.find((item) => item.value === currentLang)!.icon}
+              {languages.find((item) => item.value === currentLang.value)!.icon}
             </div>
           </div>
 
           {showDropdown.value &&
             languages
-              .filter((item) => item.value !== currentLang)
+              .filter((item) => item.value !== currentLang.value)
               .map((item) => (
                 <div
                   class="h-8 w-8 overflow-hidden rounded-full"
                   key={item.value}
-                  onClick$={() => selectLang$(item.value as TLangCode)}
+                  onClick$={() => (currentLang.value = item.value as TLangCode)}
                 >
                   {item.icon}
                 </div>

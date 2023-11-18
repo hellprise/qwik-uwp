@@ -4,6 +4,7 @@ import { type Signal } from "@builder.io/qwik";
 export type TMessage = {
   from: "agent" | "customer";
   content: string;
+  base64AudioData?: string;
 };
 
 export type TFetchData = {

@@ -43,7 +43,6 @@
     "vite-tsconfig-paths": "^4.2.1"
   },
   "dependencies": {
-    "@fontsource-variable/montserrat": "^5.0.16",
-    "tailwindcss-border-gradient-radius": "^3.0.1"
+    "@fontsource-variable/montserrat": "^5.0.16"
   }
 }

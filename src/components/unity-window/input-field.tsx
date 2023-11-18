@@ -1,32 +1,45 @@
-import { component$, useSignal, $ } from "@builder.io/qwik";
+import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
+import { type QwikKeyboardEvent } from "@builder.io/qwik";
+import { type TTextInputField } from "~/types";
 
 import { BtnAddDocument, BtnSend } from "../buttons";
-import { type TTextInputField } from "~/types";
 
 export const TextInputField = component$<TTextInputField>(
   ({ sendMessage, isFetching }) => {
     const ref = useSignal<HTMLTextAreaElement>();
     const inputtedText = useSignal<string>();
 
-    const handleInput = $((_: Event, el: HTMLTextAreaElement) => {
-      inputtedText.value = el.value;
-    });
-
-    const handleResize = $((_: Event, el: HTMLTextAreaElement) => {
-      const newHeight = el.scrollHeight + 2; // 2 is added because of the border;
-      el.style.height = newHeight > 140 ? "140px" : newHeight + "px";
-    });
-
-    const handleReset = $(() => {
+    const handleSubmit = $(() => {
+      sendMessage(inputtedText.value);
       inputtedText.value = "";
-      if (ref.value) {
-        ref.value.style.height = "44px";
+    });
+
+    const handleKeyDown = $((event: QwikKeyboardEvent<HTMLFormElement>) => {
+      if (event.ctrlKey && event.key === "Enter") {
+        handleSubmit();
       }
     });
 
-    const handleSubmit = $(() => {
-      sendMessage(inputtedText.value);
-      handleReset();
+    useVisibleTask$(({ track }) => {
+      track(() => inputtedText.value);
+      if (!ref.value) {
+        return;
+      } else if (ref.value.scrollHeight + 2 === 44) {
+        // 2 is added because of the border;
+        return;
+      } else if (!inputtedText.value) {
+        ref.value.style.height = "44px";
+        return;
+      }
+      const newHeight = ref.value.scrollHeight + 2;
+      ref.value.style.height = newHeight > 140 ? "140px" : newHeight + "px";
+    });
+
+    useVisibleTask$(({ track }) => {
+      track(() => isFetching.value);
+      if (ref.value && !isFetching.value) {
+        ref.value.focus();
+      }
     });
 
     return (
@@ -34,6 +47,7 @@ export const TextInputField = component$<TTextInputField>(
         preventdefault:submit
         class="flex items-center justify-between gap-3"
         onSubmit$={handleSubmit}
+        onKeyDown$={handleKeyDown}
       >
         <div class="h-7 shrink-0">
           <BtnAddDocument />
@@ -42,12 +56,11 @@ export const TextInputField = component$<TTextInputField>(
         <textarea
           ref={ref}
           autoComplete="off"
-          class="h-11 grow resize-none rounded-[10px] border bg-[#323232] p-[10px] text-sm text-[#DEDEDE] outline-none disabled:border-slate-500"
+          class="gradient-bd-white-bg-gray h-11 w-full grow resize-none overflow-hidden rounded-[10px] p-[10px] text-sm text-[#DEDEDE] outline-none transition-all"
           placeholder={
             isFetching.value ? "Wait for the AI reply" : "Type a message"
           }
-          value={inputtedText.value}
-          onInput$={[handleInput, handleResize]}
+          bind:value={inputtedText}
           disabled={isFetching.value}
         />
 

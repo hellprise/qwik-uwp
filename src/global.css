@@ -13,12 +13,14 @@
  * the styles in here will be applied to the Document, without any sort of CSS scoping.
  *
  */
+
 html {
   -webkit-text-size-adjust: 100%;
   -moz-tab-size: 4;
   -o-tab-size: 4;
   tab-size: 4;
   font-family: "Montserrat Variable", sans-serif;
+  min-width: 300px;
 }
 
 body {
@@ -33,5 +35,56 @@ body {
 
   .block-center {
     @apply absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform;
+  }
+}
+
+@layer components {
+  .gradient-bd-purple-bg-dark {
+    background:
+      linear-gradient(black, #171717) padding-box,
+      linear-gradient(#9363fd, #323232) border-box;
+    border: 1px solid transparent;
+  }
+
+  .gradient-bd-white-bg-dark {
+    background:
+      linear-gradient(#171717, #171717) padding-box,
+      linear-gradient(#dedede, #323232) border-box;
+    border: 1px solid transparent;
+  }
+
+  .gradient-bd-purple-bg-gray {
+    background:
+      linear-gradient(#323232, #323232) padding-box,
+      linear-gradient(#9363fd, #323232) border-box;
+    border: 1px solid transparent;
+  }
+
+  .gradient-bd-white-bg-gray {
+    background:
+      linear-gradient(#323232, #323232) padding-box,
+      linear-gradient(#dedede, #323232) border-box;
+    border: 1px solid transparent;
+  }
+
+  progress {
+    display: block;
+    border: none;
+  }
+
+  .progress-audio {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #dedede;
+  }
+  .progress-audio::-webkit-progress-bar {
+    background-color: #dedede;
+  }
+  .progress-audio::-webkit-progress-value {
+    background-color: #9363fd;
+  }
+  .progress-audio::-moz-progress-bar {
+    background-color: #9363fd;
   }
 }

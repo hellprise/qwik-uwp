@@ -1,21 +1,21 @@
-import { type QRL, component$ } from "@builder.io/qwik";
-import { ArrowUp } from "../icons/arrow-up";
+import { type Signal, component$ } from "@builder.io/qwik";
+import { ArrowUp } from "../icons";
 
 interface BtnOpenWindowProps {
-  open: boolean;
-  onClick$: QRL<() => boolean>;
+  isWindowOpened: Signal<boolean>;
+  class?: string;
 }
 
 export const BtnOpenWindow = component$<BtnOpenWindowProps>(
-  ({ open, onClick$ }) => {
+  ({ isWindowOpened, class: appendClass }) => {
     return (
       <button
-        class="flex-center h-9 w-9 rounded-full border bg-neutral-900"
-        onClick$={onClick$}
+        class={`flex-center gradient-bd-white-bg-dark h-9 w-9 rounded-full ${appendClass}`}
+        onClick$={() => (isWindowOpened.value = !isWindowOpened.value)}
       >
         <ArrowUp
           class={`transition-transform ${
-            open ? "" : "rotate-180"
+            isWindowOpened.value ? "" : "rotate-180"
           }`}
         />
       </button>

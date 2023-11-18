@@ -1,7 +1,7 @@
 import { component$ } from "@builder.io/qwik";
-import Image from "~/components/img/unity.png?jsx";
+import ImageUnity from "~/components/img/unity.png?jsx";
 
- interface BtnUnityProps {}
+interface BtnUnityProps {}
 
 export const BtnUnity = component$<BtnUnityProps>((props) => {
   {
@@ -9,8 +9,8 @@ export const BtnUnity = component$<BtnUnityProps>((props) => {
   }
 
   return (
-    <button class="h-16 w-16 rounded-full border">
-      <Image />
+    <button class="h-16 w-16 rounded-full">
+      <ImageUnity />
     </button>
   );
 });

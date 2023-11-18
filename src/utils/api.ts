@@ -8,60 +8,21 @@ import {
 } from "~/constants";
 import { type TFetchData } from "~/types";
 
-export const textToTextApi = async (data: TFetchData) => {
-  return await executeFetch<TFetchData>(TEXT_TO_TEXT_URL, data);
+type TOptions = {
+  method: "POST";
+  headers: Record<string, string>;
+  mode: "cors" | "no-cors";
+  body: string;
 };
 
-export const textToSpeechApi = $(async (data: TFetchData) => {
-  const res = await fetch(TEXT_TO_SPEECH_URL, {
-    body: JSON.stringify(data),
-    method: "POST",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  console.log("res", res);
-
-  return await res.json();
-});
-
-export const speechToTextApi = $(async (data: TFetchData) => {
-  const res = await fetch(SPEECH_TO_TEXT_URL, {
-    body: JSON.stringify(data),
-    method: "POST",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  console.log("res", res);
-
-  return await res.json();
-});
-
-export const speechToSpeechApi = $(async (data: TFetchData) => {
-  const res = await fetch(SPEECH_TO_SPEECH_URL, {
-    body: JSON.stringify(data),
-    method: "POST",
-    mode: "cors",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
-  console.log("res", res);
-
-  return await res.json();
-});
-
-export const executeFetch = async <R>(
+const executeFetch = async (
   url: string,
   body: TFetchData,
-): Promise<R | undefined> => {
-  const requestOptions = {
+): Promise<TFetchData | undefined> => {
+  const requestOptions: TOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    // mode: "cors",
+    mode: "cors",
     body: JSON.stringify(body),
   };
 
@@ -75,3 +36,19 @@ export const executeFetch = async <R>(
     console.error(`Could not fetch from ${url}.\nReason: ${error}`);
   }
 };
+
+export const textToTextApi = $(async (data: TFetchData) => {
+  return await executeFetch(TEXT_TO_TEXT_URL, data);
+});
+
+export const textToSpeechApi = $(async (data: TFetchData) => {
+  return await executeFetch(TEXT_TO_SPEECH_URL, data);
+});
+
+export const speechToTextApi = $(async (data: TFetchData) => {
+  return await executeFetch(SPEECH_TO_TEXT_URL, data);
+});
+
+export const speechToSpeechApi = $(async (data: TFetchData) => {
+  return await executeFetch(SPEECH_TO_SPEECH_URL, data);
+});
