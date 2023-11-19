@@ -14,24 +14,26 @@ export const TextInputField = component$<TTextInputField>(
       inputtedText.value = "";
     });
 
-    const handleKeyDown = $((event: QwikKeyboardEvent<HTMLFormElement>) => {
-      if (event.ctrlKey && event.key === "Enter") {
+    const handleKeyDown = $((e: QwikKeyboardEvent<HTMLFormElement>) => {
+      if (e.ctrlKey && e.key === "Enter") {
         handleSubmit();
       }
     });
 
     useVisibleTask$(({ track }) => {
       track(() => inputtedText.value);
-      if (!ref.value) {
-        return;
-      } else if (ref.value.scrollHeight + 2 === 44) {
-        // 2 is added because of the border;
-        return;
-      } else if (!inputtedText.value) {
+
+      if (!ref.value) return;
+      const height = ref.value.scrollHeight;
+
+      if (height > 42 && height < 44) return;
+
+      if (!inputtedText.value) {
         ref.value.style.height = "44px";
         return;
       }
-      const newHeight = ref.value.scrollHeight + 2;
+
+      const newHeight = height + 2; // 2 is added because of the border;
       ref.value.style.height = newHeight > 140 ? "140px" : newHeight + "px";
     });
 
@@ -56,7 +58,7 @@ export const TextInputField = component$<TTextInputField>(
         <textarea
           ref={ref}
           autoComplete="off"
-          class="gradient-bd-white-bg-gray h-11 w-full grow resize-none overflow-hidden rounded-[10px] p-[10px] text-sm text-[#DEDEDE] outline-none transition-all"
+          class="gradient-bd-white-bg-gray h-11 w-full grow resize-none overflow-hidden rounded-[10px] p-[10px] text-sm text-[#DEDEDE] outline-none transition-transform"
           placeholder={
             isFetching.value ? "Wait for the AI reply" : "Type a message"
           }

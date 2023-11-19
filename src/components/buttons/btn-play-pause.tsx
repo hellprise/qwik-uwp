@@ -1,9 +1,11 @@
-import { component$, type QRL } from "@builder.io/qwik";
+import { component$ } from "@builder.io/qwik";
+import type { PropFunction } from "@builder.io/qwik";
+
 import { IconPlay, IconPause } from "../icons";
 
 interface BtnProps {
   isAudioPlaying: boolean;
-  action$: QRL<() => void>;
+  action$: PropFunction<() => void>;
 }
 
 export const BtnPlayPause = component$<BtnProps>(

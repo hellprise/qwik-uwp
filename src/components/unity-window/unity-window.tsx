@@ -16,7 +16,8 @@ import * as icons from "../icons";
 
 import type { TLangCode, TMessage } from "~/types";
 import { textToSpeechApi, textToTextApi } from "~/utils/api";
-import { AudioPlayer } from "../audio-player/audio-player";
+import { AudioRecorder } from "~/hooks/use-audio-recorder";
+import { AudioRecorder2 } from "../audio-recorder/audio-recorder2";
 
 interface UnityWindowProps {}
 
@@ -24,7 +25,7 @@ export default component$<UnityWindowProps>(() => {
   // const actTextToText = useTextToTextApi();
   const messages = useStore<{ data: TMessage[] }>({ data: [] });
   const chatRef = useSignal<Element>();
-  const isSoundActive = useSignal(false);
+  const isSoundActive = useSignal(true);
   const isWindowOpened = useSignal(true);
   const isFetching = useSignal(false);
   const currentLang = useSignal<TLangCode>("en_GB");
@@ -104,10 +105,11 @@ export default component$<UnityWindowProps>(() => {
           class="flex h-[360px] flex-col gap-4 overflow-y-auto px-5 py-3"
           ref={chatRef}
         >
-          {/* <AudioPlayer /> */}
           {messages.data.map((el, i) => (
             <MessageRow {...el} key={i} />
           ))}
+
+          <AudioRecorder2/>
 
           {isFetching.value && <icons.IconLoader />}
         </div>

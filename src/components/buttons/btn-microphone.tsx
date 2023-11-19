@@ -8,7 +8,9 @@ import { Microphone } from "../icons/microphone";
 export const BtnMicrophone = component$(() => {
   return (
     <div class="h-[60px] w-[60px] rounded-full bg-gradient-to-b from-[#9363FD] to-[#323232] p-px shadow-lg shadow-[#9363FD]/50">
-      <button class="flex-center h-full w-full rounded-full bg-black/60 shadow-inner shadow-black">
+      <button
+        onKeyPress$={(e)=>console.log(e)}
+        class="flex-center h-full w-full rounded-full bg-black/60 shadow-inner shadow-black">
         <Microphone />
       </button>
     </div>

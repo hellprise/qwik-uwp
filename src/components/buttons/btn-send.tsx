@@ -9,7 +9,7 @@ export const BtnSend = component$<BtnOpenWindowProps>(({ disabled }) => {
   return (
     <button
       type="submit"
-      class="flex-center gradient-bd-purple-bg-gray disabled:gradient-bd-white-bg-gray h-11 w-[46px] rounded-[10px] text-[#9363FD] disabled:text-[#DEDEDE]"
+      class="flex-center gradient-bd-purple-bg-gray disabled:gradient-bd-white-bg-gray h-11 w-[46px] rounded-[10px] text-[#9363FD] transition-colors duration-300 disabled:text-[#DEDEDE]"
       disabled={disabled}
     >
       <IconSend />
