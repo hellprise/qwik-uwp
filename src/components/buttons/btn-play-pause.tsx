@@ -2,18 +2,18 @@ import { component$, type QRL } from "@builder.io/qwik";
 import { IconPlay, IconPause } from "../icons";
 
 interface BtnProps {
-  isAudioActive?: boolean;
+  isAudioPlaying: boolean;
   action$: QRL<() => void>;
 }
 
 export const BtnPlayPause = component$<BtnProps>(
-  ({ isAudioActive, action$ }) => {
+  ({ isAudioPlaying, action$ }) => {
     return (
       <button
-        class="gradient-bd-white-bg-dark h-6 w-6 rounded-full"
+        class="gradient-bd-white-bg-dark max-w-8 h-full max-h-8 w-full rounded-full"
         onClick$={action$}
       >
-        {isAudioActive ? <IconPlay /> : <IconPause />}
+        {!isAudioPlaying ? <IconPlay /> : <IconPause />}
       </button>
     );
   },

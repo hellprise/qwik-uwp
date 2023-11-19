@@ -3,14 +3,13 @@ import { type TMessage } from "~/types";
 
 import { IconCustomer } from "../icons";
 import ImageUnity from "~/components/img/unity.png?jsx";
+import { AudioPlayer } from "../audio-player/audio-player";
 // import { AudioRow } from "./audio-row";
 
 type Props = TMessage & { ref?: Signal<Element | undefined> };
 
 export const MessageRow = component$<Props>(
   ({ from, content, base64AudioData }) => {
-    const src = "data:audio/wav;base64," + base64AudioData;
-
     return from === "customer" ? (
       <div class="flex gap-2 self-end text-sm text-[#DEDEDE]">
         <span>{content}</span>
@@ -33,12 +32,7 @@ export const MessageRow = component$<Props>(
         <div class="flex flex-col gap-2">
           <span>{content}</span>
 
-          {base64AudioData && (
-            <audio controls src={src}>
-              Your browser does not support the
-              <code>audio</code> element.
-            </audio>
-          )}
+          {base64AudioData && <AudioPlayer base64AudioData={base64AudioData} />}
         </div>
       </div>
     );
