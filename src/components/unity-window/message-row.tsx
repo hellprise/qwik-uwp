@@ -1,10 +1,9 @@
 import { type Signal, component$ } from "@builder.io/qwik";
 import { type TMessage } from "~/types";
 
+import { AudioPlayer } from "../audio-player/audio-player";
 import { IconCustomer } from "../icons";
 import ImageUnity from "~/components/img/unity.png?jsx";
-import { AudioPlayer } from "../audio-player/audio-player";
-// import { AudioRow } from "./audio-row";
 
 type Props = TMessage & { ref?: Signal<Element | undefined> };
 
@@ -18,12 +17,9 @@ export const MessageRow = component$<Props>(
           <IconCustomer />
         </div>
 
-        {/* {base64AudioData && (
-          <audio controls src={src}>
-            Your browser does not support the
-            <code>audio</code> element.
-          </audio>
-        )} */}
+        {base64AudioData && (
+          <AudioPlayer isCustomer base64AudioData={base64AudioData} />
+        )}
       </div>
     ) : (
       <div class="flex gap-2 text-sm text-[#BD9FFE]">
@@ -39,20 +35,3 @@ export const MessageRow = component$<Props>(
   },
 );
 
-// base64AudioData ? (
-//   <audio controls src={"data:audio/wav;base64," + content}>
-//     Your browser does not support the
-//     <code>audio</code> element.
-//   </audio>
-// ) : from === "customer" ? (
-//   <div class="ml-10 flex w-fit items-center gap-2 self-end rounded-lg px-3 py-1.5 text-sm text-[#DEDEDE]">
-//     <span>{content}</span>
-//     <div class="h-6 w-6 rounded-full outline outline-1">
-//       <IconCustomer />
-//     </div>
-//   </div>
-// ) : (
-//   <div class="mr-10 w-fit self-start rounded-lg px-3 py-1.5 text-sm text-[#BD9FFE]">
-//     <span>{content}</span>
-//   </div>
-// )
