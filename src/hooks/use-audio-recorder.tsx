@@ -1,44 +1,87 @@
 import type { NoSerialize } from "@builder.io/qwik";
-import { component$, useSignal, $, noSerialize } from "@builder.io/qwik";
+import {
+  $,
+  noSerialize,
+  useComputed$,
+  useSignal,
+  useVisibleTask$,
+} from "@builder.io/qwik";
 
-export const AudioRecorder = component$(() => {
-  const mediaRecorderRef = useSignal<NoSerialize<MediaRecorder | null>>();
-  const chunks = useSignal<NoSerialize<Blob[]>>();
+const requestRecorder = async () => {
+  const constraints = { audio: true, video: false };
+  const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
-  const handleStartRecording = $(async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const mediaRecorder = new MediaRecorder(stream);
+  return new MediaRecorder(stream);
+};
 
-    mediaRecorder.ondataavailable = (e) => {
-      if (e.data.size > 0) {
-        const newChunks = chunks.value ? [...chunks.value, e.data] : [e.data];
-        chunks.value = noSerialize(newChunks);
+/**
+ * React hook to use browser's recorder.
+ *
+ * @example
+ * import { useRecorder } from 'react-hook-recorder';
+ * const [audioURL, isRecording, startRecording, stopRecording] = useRecorder();
+ *
+ * @example
+ * // use audioURL
+ * <audio controls src={audioURL} />
+ *
+ * @example
+ * // use startRecording
+ * startRecording()
+ *
+ * @example
+ * // use stopRecording
+ * stopRecording()
+ *
+ * @param no
+ */
+
+export const useRecorder = () => {
+  const audioURL = useSignal<string>();
+  const isRecording = useSignal(false);
+  const recorder = useSignal<NoSerialize<MediaRecorder>>();
+
+  useComputed$(() => {
+    console.log(audioURL.value);
+  });
+
+  useVisibleTask$(({ track }) => {
+    track(() => recorder.value);
+    track(() => isRecording.value);
+
+    if (!recorder.value) {
+      if (isRecording.value) {
+        requestRecorder().then(
+          (mr) => (recorder.value = noSerialize(mr)),
+          console.error,
+        );
       }
-    };
-
-    mediaRecorder.onstop = () => {
-      const audioBlob = new Blob(chunks.value, { type: "audio/wav" });
-      const audioUrl = URL.createObjectURL(audioBlob);
-      console.log(audioUrl);
-      
-      // audioUrl теперь содержит URL для воспроизведения записанного аудио
-    };
-
-    mediaRecorderRef.value = noSerialize(mediaRecorder);
-    mediaRecorder.start();
-  });
-
-  const handleStopRecording = $(() => {
-    const mediaRecorder = mediaRecorderRef.value;
-    if (mediaRecorder && mediaRecorder.state === "recording") {
-      mediaRecorder.stop();
+      return;
     }
+
+    if (isRecording.value) {
+      recorder.value.start();
+    } else {
+      recorder.value.stop();
+    }
+
+    const handleData = (ev: BlobEvent) => {
+      console.log(ev.data);
+
+      if (!ev.data.size) return;
+      audioURL.value = URL.createObjectURL(ev.data);
+    };
+
+    recorder.value.ondataavailable = (ev) => handleData(ev);
   });
 
-  return (
-    <div class="flex items-center h-9 w-9 border">
-      <button onClick$={handleStartRecording}>Start Recording</button>
-      <button onClick$={handleStopRecording}>Stop Recording</button>
-    </div>
-  );
-});
+  const startRecording = $(() => {
+    isRecording.value = true;
+  });
+
+  const stopRecording = $(() => {
+    isRecording.value = false;
+  });
+
+  return { audioURL, isRecording, startRecording, stopRecording };
+};

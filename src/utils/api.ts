@@ -1,34 +1,31 @@
-import { $ } from "@builder.io/qwik";
-
 import {
   SPEECH_TO_SPEECH_URL,
   SPEECH_TO_TEXT_URL,
   TEXT_TO_SPEECH_URL,
   TEXT_TO_TEXT_URL,
 } from "~/constants";
-import { type TFetchData } from "~/types";
 
-type TOptions = {
-  method: "POST";
-  headers: Record<string, string>;
-  mode: "cors" | "no-cors";
-  body: string;
+const headers = {
+  Accept: "*/*",
+  "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+  "Content-Type": "application/json",
 };
 
 const executeFetch = async (
   url: string,
+  mode: "cors" | "no-cors",
   body: TFetchData,
 ): Promise<TFetchData | undefined> => {
-  const requestOptions: TOptions = {
+  const requestOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    mode: "cors",
+    headers,
+    mode,
     body: JSON.stringify(body),
   };
 
   try {
     const response = await fetch(url, requestOptions);
-    if (response.status !== 200) {
+    if (!response.ok) {
       throw new Error(response.statusText);
     }
     return await response.json();
@@ -37,18 +34,18 @@ const executeFetch = async (
   }
 };
 
-export const textToTextApi = $(async (data: TFetchData) => {
-  return await executeFetch(TEXT_TO_TEXT_URL, data);
-});
+export const textToTextApi = async (data: TFetchData) => {
+  return await executeFetch(TEXT_TO_TEXT_URL, "cors", data);
+};
 
-export const textToSpeechApi = $(async (data: TFetchData) => {
-  return await executeFetch(TEXT_TO_SPEECH_URL, data);
-});
+export const textToSpeechApi = async (data: TFetchData) => {
+  return await executeFetch(TEXT_TO_SPEECH_URL, "cors", data);
+};
 
-export const speechToTextApi = $(async (data: TFetchData) => {
-  return await executeFetch(SPEECH_TO_TEXT_URL, data);
-});
+export const speechToTextApi = async (data: TFetchData) => {
+  return await executeFetch(SPEECH_TO_TEXT_URL, "no-cors", data);
+};
 
-export const speechToSpeechApi = $(async (data: TFetchData) => {
-  return await executeFetch(SPEECH_TO_SPEECH_URL, data);
-});
+export const speechToSpeechApi = async (data: TFetchData) => {
+  return await executeFetch(SPEECH_TO_SPEECH_URL, "no-cors", data);
+};

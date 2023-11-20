@@ -1,17 +1,16 @@
-import { component$, useSignal, $, useVisibleTask$ } from "@builder.io/qwik";
-import { type QwikKeyboardEvent } from "@builder.io/qwik";
-import { type TTextInputField } from "~/types";
+import { component$, useSignal, $, useComputed$ } from "@builder.io/qwik";
+import type { QwikKeyboardEvent } from "@builder.io/qwik";
 
 import { BtnAddDocument, BtnSend } from "../buttons";
 
-export const TextInputField = component$<TTextInputField>(
+export const TextBlock = component$<TMessageBlock>(
   ({ sendMessage, isFetching }) => {
     const ref = useSignal<HTMLTextAreaElement>();
     const inputtedText = useSignal<string>();
 
     const handleSubmit = $(() => {
-      sendMessage(inputtedText.value);
-      inputtedText.value = "";
+      inputtedText.value && sendMessage(inputtedText.value);
+      inputtedText.value = undefined;
     });
 
     const handleKeyDown = $((e: QwikKeyboardEvent<HTMLFormElement>) => {
@@ -20,9 +19,7 @@ export const TextInputField = component$<TTextInputField>(
       }
     });
 
-    useVisibleTask$(({ track }) => {
-      track(() => inputtedText.value);
-
+    useComputed$(() => {
       if (!ref.value) return;
       const height = ref.value.scrollHeight;
 
@@ -37,8 +34,7 @@ export const TextInputField = component$<TTextInputField>(
       ref.value.style.height = newHeight > 140 ? "140px" : newHeight + "px";
     });
 
-    useVisibleTask$(({ track }) => {
-      track(() => isFetching.value);
+    useComputed$(() => {
       if (ref.value && !isFetching.value) {
         ref.value.focus();
       }
@@ -58,7 +54,7 @@ export const TextInputField = component$<TTextInputField>(
         <textarea
           ref={ref}
           autoComplete="off"
-          class="gradient-bd-white-bg-gray h-11 w-full grow resize-none overflow-hidden rounded-[10px] p-[10px] text-sm text-[#DEDEDE] outline-none transition-transform"
+          class="gradient-bd-white-bg-gray h-11 w-full grow resize-none overflow-hidden rounded-[10px] p-[10px] text-sm text-[#DEDEDE] outline-none transition-all"
           placeholder={
             isFetching.value ? "Wait for the AI reply" : "Type a message"
           }

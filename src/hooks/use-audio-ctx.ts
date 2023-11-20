@@ -1,13 +1,12 @@
 import type { NoSerialize, Signal } from "@builder.io/qwik";
-import { noSerialize, useSignal, useVisibleTask$ } from "@builder.io/qwik";
+import { noSerialize, useComputed$, useSignal } from "@builder.io/qwik";
 
 export const useAudioCtx = (audioRef: Signal<HTMLAudioElement | undefined>) => {
   const audioCtx = useSignal<NoSerialize<AudioContext>>();
   const analyser = useSignal<NoSerialize<AnalyserNode>>();
   const freqArray = useSignal<NoSerialize<Uint8Array>>();
 
-  useVisibleTask$(({ track }) => {
-    track(() => audioRef.value);
+  useComputed$(() => {
     if (!audioRef.value) return;
 
     audioCtx.value = noSerialize(new AudioContext());

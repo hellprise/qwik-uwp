@@ -1,18 +1,15 @@
-import { type Signal } from "@builder.io/qwik";
-// import { type ActionStore } from "@builder.io/qwik-city";
-
-export type TMessage = {
+type TMessage = {
   from: "agent" | "customer";
   content: string;
   base64AudioData?: string;
 };
 
-export type TFetchData = {
+type TFetchData = {
   content: string;
   language_code: string;
 };
 
-export type TLangCode =
+type TLangCode =
   | "en_GB"
   | "es_ES"
   | "sv_SE"
@@ -23,7 +20,7 @@ export type TLangCode =
   | "pl_PL"
   | "ru_RU";
 
-export type TTextInputField = {
-  isFetching: Signal<boolean>;
-  sendMessage: QRL<() => Promise<void>>;
-};
+  type TMessageBlock = {
+    isFetching: Signal<boolean>;
+    sendMessage: PropFunction<(message: string) => Promise<void>>;
+  };

@@ -2,21 +2,21 @@ import { component$, type Signal } from "@builder.io/qwik";
 import { SoundOn, SoundOff } from "../icons";
 
 interface BtnSoundProps {
-  isSoundActive: Signal<boolean>;
+  isSoundEnabled: Signal<boolean>;
 }
 
-export const BtnSound = component$<BtnSoundProps>(({ isSoundActive }) => {
+export const BtnSound = component$<BtnSoundProps>(({ isSoundEnabled }) => {
   return (
     <button
       class="flex-center gradient-bd-white-bg-dark h-9 w-[84px] gap-2 rounded-full"
-      onClick$={() => (isSoundActive.value = !isSoundActive.value)}
+      onClick$={() => (isSoundEnabled.value = !isSoundEnabled.value)}
     >
       <div class="h-[22px] w-[22px] shrink-0">
-        {isSoundActive.value ? <SoundOn /> : <SoundOff />}
+        {isSoundEnabled.value ? <SoundOn /> : <SoundOff />}
       </div>
 
       <span class="text-sm uppercase leading-5 text-white">
-        {isSoundActive.value ? "ON" : "OFF"}
+        {isSoundEnabled.value ? "ON" : "OFF"}
       </span>
     </button>
   );
