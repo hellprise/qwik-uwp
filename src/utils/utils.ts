@@ -5,34 +5,34 @@ export const formatTime = (sec: number) => {
   return `${minutes}:${formattedSeconds}`;
 };
 
+export const toBase64 = (
+  file: File | any,
+): Promise<string | ArrayBuffer | null> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    // reader.onload = function () {
+    //     const arrayBuffer = reader.result;
+    //
+    //     const base64str = btoa(arrayBuffer);
+    // }
+  });
 
-export const toBase64 = (file: File | any): Promise<string | ArrayBuffer | null> => new Promise((resolve, reject) => {
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => resolve(reader.result);
-  reader.onerror = reject;
-  // reader.onload = function () {
-  //     const arrayBuffer = reader.result;
-  //
-  //     const base64str = btoa(arrayBuffer);
-  // }
-}
-)
+// export function blobToBase64(blob) {
+//   return new Promise((resolve, reject) => {
+//     const reader = new FileReader();
 
+//     reader.onload = () => {
+//       const base64String = reader.result.split(",")[1];
+//       resolve(base64String);
+//     };
 
-export function blobToBase64(blob) {
-return new Promise((resolve, reject) => {
-const reader = new FileReader();
+//     reader.onerror = () => {
+//       reject(new Error("Error reading Blob as base64"));
+//     };
 
-  reader.onload = () => {
-  const base64String = reader.result.split(',')[1];
-  resolve(base64String);
-};
-
-reader.onerror = () => {
-  reject(new Error('Error reading Blob as base64'));
-};
-
-reader.readAsDataURL(blob);
-});
-}
+//     reader.readAsDataURL(blob);
+//   });
+// }

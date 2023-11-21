@@ -8,12 +8,10 @@ type MediaButtonProps = {
   statusRecording: Signal<APRecordingStatus>;
   startRecording: PropFunction<() => void>;
   stopRecording: PropFunction<() => void>;
-  formattedDuration: Readonly<Signal<string>>;
 };
 
 export const BtnMicrophone = component$<MediaButtonProps>((props) => {
-  const { statusRecording, startRecording, stopRecording, formattedDuration } =
-    props;
+  const { statusRecording, startRecording, stopRecording } = props;
 
   const handlePlayPause = $(() => {
     if (
@@ -34,7 +32,6 @@ export const BtnMicrophone = component$<MediaButtonProps>((props) => {
         onKeyPress$={(e) => console.log(e)}
         class="flex-center relative h-full w-full rounded-full bg-black/60 shadow-inner shadow-black"
       >
-        <span class="absolute -top-8">{formattedDuration.value}</span>
         <Microphone />
       </button>
     </div>

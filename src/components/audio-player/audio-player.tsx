@@ -28,10 +28,10 @@ export const AudioPlayer = component$<Props>(
     const handlePlayPause = $(() => {
       if (isAudioPlaying.value) {
         audioRef.value?.pause();
-        // audioCtx.value?.suspend();
+        audioCtx.value?.suspend(); // TODO: to refactor
       } else {
         audioRef.value?.play();
-        // audioCtx.value?.resume();
+        audioCtx.value?.resume(); // TODO: to refactor
       }
     });
 

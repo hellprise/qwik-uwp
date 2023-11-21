@@ -23,9 +23,19 @@ export const AudioBlock = component$<TMessageBlock>(() => {
   });
 
   return (
-    <div class="text-white">
+    <div class="flex">
+      <span class="text-sm leading-5 text-white">
+        {formattedDuration.value}
+      </span>
+
       <div class="mx-auto w-fit">
-        <BtnMicrophone {...{ startRecording, stopRecording, statusRecording, formattedDuration }} />
+        <BtnMicrophone
+          {...{
+            startRecording,
+            stopRecording,
+            statusRecording,
+          }}
+        />
       </div>
 
       {/* <MediaButton
