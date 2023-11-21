@@ -1,5 +1,5 @@
 type TMessage = {
-  from: "agent" | "customer";
+  from: "unity" | "customer";
   content: string;
   base64AudioData?: string;
 };

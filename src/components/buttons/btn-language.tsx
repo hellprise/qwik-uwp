@@ -1,6 +1,5 @@
 import { type Signal, component$, useSignal } from "@builder.io/qwik";
 import * as icons from "../icons";
-import { type TLangCode } from "~/types";
 
 export const languages = [
   {

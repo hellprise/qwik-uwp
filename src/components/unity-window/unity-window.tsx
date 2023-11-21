@@ -1,28 +1,17 @@
+import { component$, useVisibleTask$ } from "@builder.io/qwik";
+import { $, useSignal, useStore } from "@builder.io/qwik";
 import { type DocumentHead } from "@builder.io/qwik-city";
-import {
-  $,
-  component$,
-  useSignal,
-  useStore,
-  useVisibleTask$,
-} from "@builder.io/qwik";
 
+import { textToSpeechApi, textToTextApi } from "~/utils/api";
+import { speechToSpeechApi, speechToTextApi } from "~/utils/api";
+
+import { AudioBlock } from "../audio-block";
 import { TextBlock } from "./text-block";
 import { MessageRow } from "./message-row";
 import * as btns from "../buttons";
 import * as icons from "../icons";
 
-import {
-  speechToSpeechApi,
-  speechToTextApi,
-  textToSpeechApi,
-  textToTextApi,
-} from "~/utils/api";
-import { AudioBlock } from "./audio-block";
-
-interface UnityWindowProps {}
-
-export default component$<UnityWindowProps>(() => {
+export default component$(() => {
   const messages = useStore<{ data: TMessage[] }>({ data: [] });
   const chatRef = useSignal<Element>();
   const isSoundEnabled = useSignal(true);
@@ -45,7 +34,7 @@ export default component$<UnityWindowProps>(() => {
     ]);
 
     const messageData: TMessage = {
-      from: "agent",
+      from: "unity",
       content: resTextMessage
         ? resTextMessage.content
         : "Something's gone wrong ...",
@@ -93,11 +82,6 @@ export default component$<UnityWindowProps>(() => {
     // messages.data.push({ from: "agent", content, typeAudio: !!audioData });
     isFetching.value = false;
   });
-
-  // const sendMessage = $((message: string) => {
-  //   sendTextMessage$(message);
-  //   // sendAudioMessage(message);
-  // });
 
   useVisibleTask$(({ track }) => {
     track(() => messages.data.length);

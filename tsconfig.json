@@ -22,5 +22,5 @@
     }
   },
   "files": ["./.eslintrc.cjs"],
-  "include": ["src", "./*.d.ts", "./*.config.ts"]
+  "include": ["src", "./*.d.ts", "./*.config.ts", "temp/use-audio-recorder.tsx", "temp/index.tsx", "temp/DynamicIcon.tsx"]
 }

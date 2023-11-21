@@ -1,4 +1,5 @@
-import {noSerialize, useSignal, useVisibleTask$, $, type NoSerialize} from "@builder.io/qwik";
+import { noSerialize, useSignal, useVisibleTask$, $ } from "@builder.io/qwik";
+import type { NoSerialize } from "@builder.io/qwik";
 
 export const useSound = (url: string) => {
   const audioRef = useSignal<NoSerialize<HTMLAudioElement>>();
@@ -8,15 +9,16 @@ export const useSound = (url: string) => {
 
   useVisibleTask$(async () => {
     const audio = new Audio(url);
-    audio.addEventListener("play", () => isPlaying.value = true);
-    audio.addEventListener("ended", () => isPlaying.value = false);
-    audio.addEventListener("pause", () => isPlaying.value = false);
+    // audio.onplay = () => (isPlaying.value = true);
+    audio.addEventListener("play", () => (isPlaying.value = true));
+    audio.addEventListener("ended", () => (isPlaying.value = false));
+    audio.addEventListener("pause", () => (isPlaying.value = false));
     audio.addEventListener("timeupdate", () => {
       time.value = audio.currentTime;
-    })
+    });
     audio.addEventListener("loadedmetadata", () => {
       duration.value = audio.duration;
-    })
+    });
     audioRef.value = noSerialize(audio);
   });
 
@@ -25,13 +27,13 @@ export const useSound = (url: string) => {
 
   const undo = $((offset: number = 10) => {
     if (audioRef.value) {
-      audioRef.value.currentTime -= offset
+      audioRef.value.currentTime -= offset;
     }
   });
 
   const redo = $((offset: number = 10) => {
     if (audioRef.value) {
-      audioRef.value.currentTime += offset
+      audioRef.value.currentTime += offset;
     }
   });
 
@@ -41,5 +43,5 @@ export const useSound = (url: string) => {
     }
   });
 
-  return {play, stop, isPlaying, time, undo, redo, seek, duration};
-}
+  return { play, stop, isPlaying, time, undo, redo, seek, duration };
+};

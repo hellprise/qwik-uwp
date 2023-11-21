@@ -5,7 +5,7 @@ type DynamicIconProps = {
   analyser: Signal<NoSerialize<AnalyserNode> | null>;
 };
 
-export const ProgressBar2 = component$<DynamicIconProps>(({ analyser }) => {
+export const ProgressBarNew = component$<DynamicIconProps>(({ analyser }) => {
   const ref = useSignal<SVGElement>();
 
   useVisibleTask$(({ cleanup }) => {
@@ -68,7 +68,7 @@ export const ProgressBar2 = component$<DynamicIconProps>(({ analyser }) => {
           key={i}
           x={i * 10}
           width="8"
-          fill="#42a5f5"
+          fill="#BD9FFE"
         />
       ))}
     </svg>

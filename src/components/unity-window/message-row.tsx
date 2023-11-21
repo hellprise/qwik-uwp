@@ -1,5 +1,4 @@
 import { component$ } from "@builder.io/qwik";
-import { type TMessage } from "~/types";
 
 import { AudioPlayer } from "../audio-player/audio-player";
 import { IconCustomer } from "../icons";

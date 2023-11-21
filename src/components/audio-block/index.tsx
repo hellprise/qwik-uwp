@@ -1,6 +1,6 @@
 import { component$, useVisibleTask$ } from "@builder.io/qwik";
-import { useMediaRecorder } from "~/hooks/useMediaRecorder";
-import { MediaButton } from "../audio-recorder/button";
+import { useAudioProcessor } from "~/hooks/use-audio-processor";
+
 import { BtnMicrophone } from "../buttons";
 
 export const AudioBlock = component$<TMessageBlock>(() => {
@@ -11,9 +11,8 @@ export const AudioBlock = component$<TMessageBlock>(() => {
     clearRecording,
     audioBlob,
     formattedDuration,
-    analyser,
-    transcript,
-  } = useMediaRecorder({ transcipt: { enable: true }, enableAnalyser: true });
+    // analyser,
+  } = useAudioProcessor({ enableAnalyser: true });
 
   useVisibleTask$(({ track, cleanup }) => {
     const blob = track(() => audioBlob.value);
@@ -23,25 +22,19 @@ export const AudioBlock = component$<TMessageBlock>(() => {
     cleanup(() => clearRecording());
   });
 
-  useVisibleTask$(({ track }) => {
-    const text = track(() => transcript.value);
-
-    console.log("text :>> ", text);
-  });
-
   return (
     <div class="text-white">
       <div class="mx-auto w-fit">
-        <BtnMicrophone />
+        <BtnMicrophone {...{ startRecording, stopRecording, statusRecording, formattedDuration }} />
       </div>
 
-      <MediaButton
+      {/* <MediaButton
         status={statusRecording}
         analyser={analyser}
         onStart={startRecording}
         onStop={stopRecording}
         formattedDuration={formattedDuration}
-      />
+      /> */}
     </div>
   );
 });
