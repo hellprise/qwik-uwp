@@ -1,15 +1,24 @@
-import { component$, useVisibleTask$ } from "@builder.io/qwik";
-import { $, useSignal, useStore } from "@builder.io/qwik";
+import {
+  $,
+  component$,
+  useSignal,
+  useStore,
+  useVisibleTask$,
+} from "@builder.io/qwik";
 import { type DocumentHead } from "@builder.io/qwik-city";
 
-import { textToSpeechApi, textToTextApi } from "~/utils/api";
-import { speechToSpeechApi, speechToTextApi } from "~/utils/api";
+import {
+  speechToSpeechApi,
+  speechToTextApi,
+  textToSpeechApi,
+  textToTextApi,
+} from "~/utils/api";
 
 import { AudioBlock } from "../audio-block";
-import { TextBlock } from "./text-block";
-import { MessageRow } from "./message-row";
 import * as btns from "../buttons";
 import * as icons from "../icons";
+import { MessageRow } from "./message-row";
+import { TextBlock } from "./text-block";
 
 export default component$(() => {
   const messages = useStore<{ data: TMessage[] }>({ data: [] });
@@ -93,9 +102,17 @@ export default component$(() => {
   });
 
   return (
-    <main class="flex h-screen w-screen items-center justify-center bg-neutral-700">
-      <div class="gradient-bd-purple-bg-dark mx-1 w-full max-w-lg overflow-hidden rounded-3xl shadow-2xl">
-        <div class="relative mx-[5px] mt-[5px] flex h-20 items-center justify-evenly rounded-[calc(24px-1px)] bg-neutral-900 text-white">
+    <main class="relative flex h-screen w-screen items-center justify-center bg-neutral-700">
+      <div
+        class={[
+          "gradient-bd-purple-bg-dark fixed bottom-2.5 left-1 right-1 max-w-lg overflow-hidden rounded-3xl shadow-2xl transition-all duration-500 min-[478px]:bottom-[52px] min-[478px]:left-2 min-[478px]:right-2 min-[528px]:left-auto min-[528px]:w-full md:bottom-[88px] md:right-[71px]",
+          {
+            "max-h-[calc(100%-16px)]": isWindowOpened.value,
+            "max-h-[85px]": !isWindowOpened.value,
+          },
+        ]}
+      >
+        <div class="relative z-[2] mx-[5px] mt-[5px] flex h-20 items-center justify-evenly rounded-[calc(24px-1px)] bg-neutral-900 text-white">
           <btns.BtnSound isSoundEnabled={isSoundEnabled} />
           <btns.BtnUnity />
 
@@ -121,9 +138,15 @@ export default component$(() => {
         </div>
 
         <div
-          class={`flex-center mx-[9.5px] mb-[9px] transition-all ${
-            isSoundEnabled.value ? "h-28" : "h-16"
-          }`}
+          class={[
+            "flex-center mx-[9.5px] mb-[9px] transition-all",
+            {
+              "h-28": isSoundEnabled.value,
+              "h-16": !isSoundEnabled.value,
+              "visible opacity-100": isWindowOpened.value,
+              "invisible opacity-0": !isWindowOpened.value,
+            },
+          ]}
         >
           {isSoundEnabled.value ? (
             <div class="mx-auto w-11/12">

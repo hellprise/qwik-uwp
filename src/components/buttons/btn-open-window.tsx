@@ -1,4 +1,4 @@
-import { type Signal, component$ } from "@builder.io/qwik";
+import { component$, type Signal } from "@builder.io/qwik";
 import { ArrowUp } from "../icons";
 
 interface BtnOpenWindowProps {
@@ -14,7 +14,7 @@ export const BtnOpenWindow = component$<BtnOpenWindowProps>(
         onClick$={() => (isWindowOpened.value = !isWindowOpened.value)}
       >
         <ArrowUp
-          class={`transition-transform ${
+          class={`absolute transition-transform ${
             isWindowOpened.value ? "" : "rotate-180"
           }`}
         />
